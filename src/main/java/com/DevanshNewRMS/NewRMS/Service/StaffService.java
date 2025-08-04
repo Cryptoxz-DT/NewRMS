@@ -1,7 +1,7 @@
 package com.DevanshNewRMS.NewRMS.Service;
 
 import com.DevanshNewRMS.NewRMS.Repository.StaffRepository;
-import com.DevanshNewRMS.NewRMS.model.Staff;
+import com.DevanshNewRMS.NewRMS.Model.Staff;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +22,10 @@ public class StaffService {
 
     public Staff getById(Long id){
         return staffRepository.findById(id).orElse(null);
+    }
+
+    public List<Staff> getStaffName(String name){
+        return staffRepository.findByNameContainingIgnoreCase(name);
     }
 
     public void delete(long id){

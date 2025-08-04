@@ -1,4 +1,4 @@
-package com.DevanshNewRMS.NewRMS.model;
+package com.DevanshNewRMS.NewRMS.Model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

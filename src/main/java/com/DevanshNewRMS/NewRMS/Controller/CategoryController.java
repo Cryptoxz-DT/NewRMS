@@ -1,7 +1,7 @@
-package com.DevanshNewRMS.NewRMS.controller;
+package com.DevanshNewRMS.NewRMS.Controller;
 
 import com.DevanshNewRMS.NewRMS.Service.CategoryService;
-import com.DevanshNewRMS.NewRMS.model.Category;
+import com.DevanshNewRMS.NewRMS.Model.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

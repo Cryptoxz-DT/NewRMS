@@ -1,5 +1,6 @@
-package com.DevanshNewRMS.NewRMS.model;
+package com.DevanshNewRMS.NewRMS.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,10 +22,9 @@ public class Dish {
     private double price;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "category_id")
     private Category category;
 
-    public Dish orElse(Object o) {
-        return null;
-    }
+
 }

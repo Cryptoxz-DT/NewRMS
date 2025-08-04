@@ -1,5 +1,6 @@
-package com.DevanshNewRMS.NewRMS.model;
+package com.DevanshNewRMS.NewRMS.Model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,6 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Dish> dishes;
-
 }

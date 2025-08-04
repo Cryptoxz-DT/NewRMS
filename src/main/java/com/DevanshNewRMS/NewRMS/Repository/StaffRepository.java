@@ -1,7 +1,11 @@
 package com.DevanshNewRMS.NewRMS.Repository;
 
-import com.DevanshNewRMS.NewRMS.model.Staff;
+import com.DevanshNewRMS.NewRMS.Model.Staff;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface StaffRepository extends JpaRepository<Staff, Long> {}
+import java.util.List;
+
+public interface StaffRepository extends JpaRepository<Staff, Long> {
+    List<Staff> findByNameContainingIgnoreCase(String name);
+}
 

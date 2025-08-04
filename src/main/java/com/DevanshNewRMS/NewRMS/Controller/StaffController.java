@@ -1,7 +1,7 @@
-package com.DevanshNewRMS.NewRMS.controller;
+package com.DevanshNewRMS.NewRMS.Controller;
 
 import com.DevanshNewRMS.NewRMS.Service.StaffService;
-import com.DevanshNewRMS.NewRMS.model.Staff;
+import com.DevanshNewRMS.NewRMS.Model.Staff;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +26,12 @@ public class StaffController {
     @GetMapping("/{id}")
     public Staff getById(Long id){
         return staffService.getById(id);
+    }
+
+    @GetMapping("/staffName/{staffName}")
+    public List<Staff> getStaffName(@PathVariable("staffName") String name){
+
+        return staffService.getStaffName(name);
     }
 
     @DeleteMapping("/{id}")

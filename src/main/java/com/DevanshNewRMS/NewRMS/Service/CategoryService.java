@@ -1,7 +1,7 @@
 package com.DevanshNewRMS.NewRMS.Service;
 
 import com.DevanshNewRMS.NewRMS.Repository.CategoryRepository;
-import com.DevanshNewRMS.NewRMS.model.Category;
+import com.DevanshNewRMS.NewRMS.Model.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

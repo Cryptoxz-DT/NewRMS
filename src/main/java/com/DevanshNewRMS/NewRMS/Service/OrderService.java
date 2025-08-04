@@ -1,8 +1,8 @@
 package com.DevanshNewRMS.NewRMS.Service;
 
+import com.DevanshNewRMS.NewRMS.DTO.OrderSummary;
 import com.DevanshNewRMS.NewRMS.Repository.OrderRepository;
-import com.DevanshNewRMS.NewRMS.model.Order;
-import org.aspectj.weaver.ast.Or;
+import com.DevanshNewRMS.NewRMS.Model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +12,15 @@ import java.util.List;
 public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
+
+    public OrderService(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+
+    public List<OrderSummary> findOrderSummaries() {
+        // This line executes the complex query you created.
+        return orderRepository.findOrderSummaries();
+    }
 
     public Order save(Order order){
         return orderRepository.save(order);

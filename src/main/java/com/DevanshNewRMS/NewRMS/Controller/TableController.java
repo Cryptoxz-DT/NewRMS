@@ -1,7 +1,7 @@
-package com.DevanshNewRMS.NewRMS.controller;
+package com.DevanshNewRMS.NewRMS.Controller;
 
 import com.DevanshNewRMS.NewRMS.Service.TableService;
-import com.DevanshNewRMS.NewRMS.model.TableInfo;
+import com.DevanshNewRMS.NewRMS.Model.TableInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

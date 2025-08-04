@@ -1,7 +1,7 @@
 package com.DevanshNewRMS.NewRMS.Service;
 
 import com.DevanshNewRMS.NewRMS.Repository.TableRepository;
-import com.DevanshNewRMS.NewRMS.model.TableInfo;
+import com.DevanshNewRMS.NewRMS.Model.TableInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

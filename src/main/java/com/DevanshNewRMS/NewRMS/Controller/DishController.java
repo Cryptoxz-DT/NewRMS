@@ -1,7 +1,8 @@
-package com.DevanshNewRMS.NewRMS.controller;
+package com.DevanshNewRMS.NewRMS.Controller;
 
 import com.DevanshNewRMS.NewRMS.Service.DishService;
-import com.DevanshNewRMS.NewRMS.model.Dish;
+import com.DevanshNewRMS.NewRMS.DTO.DishData;
+import com.DevanshNewRMS.NewRMS.Model.Dish;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,11 +16,13 @@ public class DishController {
 
     @PostMapping
     public Dish create(@RequestBody Dish dish){
+
         return dishService.save(dish);
     }
 
     @GetMapping
     public List<Dish> getAll(){
+
         return dishService.getAll();
     }
 
@@ -28,8 +31,27 @@ public class DishController {
         return dishService.getById(id);
     }
 
+    @GetMapping("/expensive")
+    public List<Dish> getExpensiveDishes(@RequestParam("price") double price) {
+        return dishService.getExpensiveDishes(price);
+    }
+
+    @GetMapping("/dish/{categoryId}")
+    public List<DishData> getExpensiveDishes(@PathVariable Long categoryId) {
+        return dishService.getDishDataByCategory(categoryId);
+    }
+
+    @GetMapping("/search/by-sale")
+    public List<Dish> getDishesBySale(
+            @RequestParam String categoryName,
+            @RequestParam Long staffId) {
+        return dishService.findDishesSoldByStaffInCategory(categoryName, staffId);
+    }
+
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){
+
         dishService.delete(id);
     }
 }
