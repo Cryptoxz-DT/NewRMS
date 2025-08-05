@@ -1,5 +1,6 @@
 package com.DevanshNewRMS.NewRMS.Service;
 
+import com.DevanshNewRMS.NewRMS.Exception.GlobalExceptionHandler;
 import com.DevanshNewRMS.NewRMS.Repository.CategoryRepository;
 import com.DevanshNewRMS.NewRMS.Model.Category;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,8 @@ public class CategoryService {
     }
 
     public Category getById(Long id){
-        return categoryRepository.findById(id).orElse(null);
+        return categoryRepository.findById(id).orElseThrow(
+                ()-> new GlobalExceptionHandler.ResourceNotFoundException("Category not found with id:" + id));
     }
 
     public void delete(Long id){

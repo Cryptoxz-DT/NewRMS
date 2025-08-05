@@ -1,6 +1,7 @@
 package com.DevanshNewRMS.NewRMS.Service;
 
 import com.DevanshNewRMS.NewRMS.DTO.OrderSummary;
+import com.DevanshNewRMS.NewRMS.Exception.GlobalExceptionHandler;
 import com.DevanshNewRMS.NewRMS.Repository.OrderRepository;
 import com.DevanshNewRMS.NewRMS.Model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,8 @@ public class OrderService {
     }
 
     public Order getById(Long id){
-        return orderRepository.findById(id).orElse(null);
+        return orderRepository.findById(id).orElseThrow(
+                ()-> new GlobalExceptionHandler.ResourceNotFoundException("Order not found with id:" + id));
     }
 
     public void delete(Long id){

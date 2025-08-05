@@ -3,7 +3,9 @@ package com.DevanshNewRMS.NewRMS.Controller;
 import com.DevanshNewRMS.NewRMS.Service.DishService;
 import com.DevanshNewRMS.NewRMS.DTO.DishData;
 import com.DevanshNewRMS.NewRMS.Model.Dish;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,14 +17,14 @@ public class DishController {
     private DishService dishService;
 
     @PostMapping
-    public Dish create(@RequestBody Dish dish){
-
+    @PreAuthorize("hasRole('ADMIN')")
+    public Dish create(@Valid @RequestBody Dish dish){
         return dishService.save(dish);
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAITER')")
     public List<Dish> getAll(){
-
         return dishService.getAll();
     }
 
