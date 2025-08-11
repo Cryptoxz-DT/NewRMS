@@ -2,6 +2,7 @@ package com.DevanshNewRMS.NewRMS.Repository;
 
 import com.DevanshNewRMS.NewRMS.Model.Order;
 import com.DevanshNewRMS.NewRMS.DTO.OrderSummary;
+import com.DevanshNewRMS.NewRMS.Model.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -25,4 +26,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "GROUP BY o.id, o.orderTime, s.name, t.tableNumber " +
             "ORDER BY o.orderTime DESC")
     List<OrderSummary> findOrderSummaries();
+
+    List<Order> findByStatus(OrderStatus status);
+    List<Order> findByCustomerId(Long customerId);
 }

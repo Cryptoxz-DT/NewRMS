@@ -25,6 +25,10 @@ public class Staff {
     private String roles;
 
     public String getRole() {
-        return "";
+        return this.roles;
+    }
+
+    public void setRoles(String Roles){
+        this.roles = roles;
     }
 }

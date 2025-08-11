@@ -17,7 +17,7 @@ public class DishController {
     private DishService dishService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public Dish create(@Valid @RequestBody Dish dish){
         return dishService.save(dish);
     }
