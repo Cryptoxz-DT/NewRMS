@@ -19,7 +19,8 @@ public class OrderStatusServiceImpl implements OrderStatusService {
 
     @Override
     public OrderStatus getOrderStatusById(Long id) {
-        return orderStatusRepository.findById(id).orElse(null);
+        return orderStatusRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("OrderStatus not found with id: " + id));
     }
 
     @Override
@@ -30,11 +31,8 @@ public class OrderStatusServiceImpl implements OrderStatusService {
     @Override
     public OrderStatus updateOrderStatus(Long id, OrderStatus orderStatus) {
         OrderStatus existing = getOrderStatusById(id);
-        if (existing != null) {
-            existing.setStatusName(orderStatus.getStatusName());
-            return orderStatusRepository.save(existing);
-        }
-        return null;
+        existing.setStatusName(orderStatus.getStatusName());
+        return orderStatusRepository.save(existing);
     }
 
     @Override

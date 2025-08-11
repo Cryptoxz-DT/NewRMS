@@ -1,9 +1,14 @@
 package com.DevanshNewRMS.NewRMS.DTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor  // This will generate the constructor we need
 public class OrderSummary {
 
     private Long orderId;
@@ -12,12 +17,5 @@ public class OrderSummary {
     private Integer tableNumber;
     private Double totalOrderAmount;
 
-    public OrderSummary(Long orderId, LocalDateTime orderTime, String staffName, Integer tableNumber, Double totalOrderAmount) {
-        this.orderId = orderId;
-        this.orderTime = orderTime;
-        this.staffName = staffName;
-        this.tableNumber = tableNumber;
-        this.totalOrderAmount = totalOrderAmount;
-    }
 
 }

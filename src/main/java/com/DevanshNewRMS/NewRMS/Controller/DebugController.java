@@ -16,8 +16,8 @@ public class DebugController {
     @Autowired
     private StaffRepository staffRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/create-admin")
     public ResponseEntity<String> createAdmin() {
@@ -30,7 +30,7 @@ public class DebugController {
             Staff admin = Staff.builder()
                     .name("Test Admin")
                     .username("admin")
-                    .password(passwordEncoder.encode("admin123"))
+//                    .password(passwordEncoder.encode("admin123"))
                     .roles("ADMIN")
                     .build();
 

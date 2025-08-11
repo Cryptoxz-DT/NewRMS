@@ -4,6 +4,7 @@ import com.DevanshNewRMS.NewRMS.Model.Reservation;
 import com.DevanshNewRMS.NewRMS.Service.ReservationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.security.access.prepost.PreAuthorize; // COMMENTED OUT
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/reservations")
-@PreAuthorize("hasAnyRole('ADMIN', 'WAITER')")
+ @PreAuthorize("hasAnyRole('ADMIN', 'WAITER')") // COMMENTED OUT FOR DEBUGGING
 public class ReservationController {
 
     @Autowired

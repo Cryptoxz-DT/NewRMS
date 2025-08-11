@@ -13,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderStatusController {
 
+    // Use the interface, not the implementation directly
     private final OrderStatusService orderStatusService;
 
     @GetMapping

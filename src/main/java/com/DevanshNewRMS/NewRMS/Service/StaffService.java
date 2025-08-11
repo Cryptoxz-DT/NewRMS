@@ -13,10 +13,12 @@ import java.util.List;
 public class StaffService {
     @Autowired
     private StaffRepository staffRepository;
-    private PasswordEncoder passwordEncoder;
+
+//    @Autowired // Fixed: Added missing autowired annotation
+//    private PasswordEncoder passwordEncoder;
 
     public Staff save(Staff staff){
-        staff.setPassword(passwordEncoder.encode(staff.getPassword()));
+//        staff.setPassword(passwordEncoder.encode(staff.getPassword()));
         return staffRepository.save(staff);
     }
 

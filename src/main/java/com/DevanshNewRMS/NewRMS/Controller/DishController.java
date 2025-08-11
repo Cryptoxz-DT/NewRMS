@@ -5,7 +5,7 @@ import com.DevanshNewRMS.NewRMS.DTO.DishData;
 import com.DevanshNewRMS.NewRMS.Model.Dish;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+// import org.springframework.security.access.prepost.PreAuthorize; // COMMENTED OUT
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,13 +17,13 @@ public class DishController {
     private DishService dishService;
 
     @PostMapping
-//    @PreAuthorize("hasRole('ADMIN')")
+    // @PreAuthorize("hasRole('ADMIN')") // COMMENTED OUT FOR DEBUGGING
     public Dish create(@Valid @RequestBody Dish dish){
         return dishService.save(dish);
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'WAITER')")
+    // @PreAuthorize("hasAnyRole('ADMIN', 'WAITER')") // COMMENTED OUT FOR DEBUGGING
     public List<Dish> getAll(){
         return dishService.getAll();
     }
@@ -50,10 +50,8 @@ public class DishController {
         return dishService.findDishesSoldByStaffInCategory(categoryName, staffId);
     }
 
-
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){
-
         dishService.delete(id);
     }
 }

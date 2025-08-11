@@ -32,7 +32,9 @@ public class Order {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @Enumerated(EnumType.STRING)
+    // Fixed: Changed from enum to entity reference
+    @ManyToOne
+    @JoinColumn(name = "status_id")
     private OrderStatus status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)

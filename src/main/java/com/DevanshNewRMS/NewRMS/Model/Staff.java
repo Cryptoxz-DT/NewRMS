@@ -4,10 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Data
@@ -28,7 +25,8 @@ public class Staff {
         return this.roles;
     }
 
-    public void setRoles(String Roles){
-        this.roles = roles;
+    public void setRole(String role) {
+        this.roles = role;
     }
+
 }

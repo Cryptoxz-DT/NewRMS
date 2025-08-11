@@ -27,6 +27,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "ORDER BY o.orderTime DESC")
     List<OrderSummary> findOrderSummaries();
 
+    // These methods might be used in future features, keeping them for now
     List<Order> findByStatus(OrderStatus status);
     List<Order> findByCustomerId(Long customerId);
 }
