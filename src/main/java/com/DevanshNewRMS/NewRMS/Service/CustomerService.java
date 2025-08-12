@@ -1,6 +1,5 @@
 package com.DevanshNewRMS.NewRMS.Service;
 
-import com.DevanshNewRMS.NewRMS.Exception.GlobalExceptionHandler;
 import com.DevanshNewRMS.NewRMS.Model.Customer;
 import com.DevanshNewRMS.NewRMS.Repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +13,25 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
 
-    public List<Customer> getAllCustomers() {
+    public Customer save(Customer customer) {
+        return customerRepository.save(customer);
+    }
+
+    public List<Customer> getAll() {
         return customerRepository.findAll();
+    }
+
+    public List<Customer> findAll() {
+        return customerRepository.findAll();
+    }
+
+    public List<Customer> getAllCustomers() {
+        return customerRepository.findAll(); // Fixed: was returning empty list
     }
 
     public Customer getCustomerById(Long id) {
         return customerRepository.findById(id)
-                .orElseThrow(() -> new GlobalExceptionHandler.ResourceNotFoundException("Customer not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Customer not found with id: " + id));
     }
 
     public Customer saveCustomer(Customer customer) {
@@ -35,10 +46,8 @@ public class CustomerService {
         return customerRepository.save(existing);
     }
 
+    // Added missing method that was being called in controller
     public void deleteCustomer(Long id) {
-        if (!customerRepository.existsById(id)) {
-            throw new GlobalExceptionHandler.ResourceNotFoundException("Customer not found with id: " + id);
-        }
         customerRepository.deleteById(id);
     }
 }

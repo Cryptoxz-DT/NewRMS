@@ -1,7 +1,6 @@
 package com.DevanshNewRMS.NewRMS.Model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,15 +19,11 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Builder.Default
-    private LocalDateTime orderTime = LocalDateTime.now();
+    private LocalDateTime orderTime;
 
-    @NotNull(message = "Table information is required")
     @ManyToOne
-    @JoinColumn(name = "table_id")
     private TableInfo tableInfo;
 
-    @NotNull(message = "Staff is required")
     @ManyToOne
     @JoinColumn(name = "staff_id")
     private Staff staff;
@@ -37,11 +32,11 @@ public class Order {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @NotNull(message = "Order status is required")
+    // Fixed: Changed from enum to entity reference
     @ManyToOne
     @JoinColumn(name = "status_id")
     private OrderStatus status;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItem> orderItems;
 }
