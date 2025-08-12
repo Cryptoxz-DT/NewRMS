@@ -2,7 +2,9 @@ package com.DevanshNewRMS.NewRMS.Controller;
 
 import com.DevanshNewRMS.NewRMS.Model.Customer;
 import com.DevanshNewRMS.NewRMS.Service.CustomerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,12 +28,13 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Customer> saveCustomer(@RequestBody Customer customer) {
-        return ResponseEntity.ok(customerService.saveCustomer(customer));
+    public ResponseEntity<Customer> saveCustomer(@Valid @RequestBody Customer customer) {
+        Customer savedCustomer = customerService.saveCustomer(customer);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedCustomer);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable Long id, @RequestBody Customer customer) {
+    public ResponseEntity<Customer> updateCustomer(@PathVariable Long id, @Valid @RequestBody Customer customer) {
         return ResponseEntity.ok(customerService.updateCustomer(id, customer));
     }
 
