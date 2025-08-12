@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "table_info", indexes = {
@@ -25,7 +26,7 @@ public class TableInfo {
     @NotNull(message = "Table number is required")
     @Min(value = 1, message = "Table number must be at least 1")
     @Max(value = 999, message = "Table number cannot exceed 999")
-    @Column(nullable = false, unique = true)
+    @Column(name = "table_number", nullable = false, unique = true)
     private int tableNumber;
     
     @NotNull(message = "Capacity is required")
@@ -33,4 +34,8 @@ public class TableInfo {
     @Max(value = 50, message = "Capacity cannot exceed 50")
     @Column(nullable = false)
     private int capacity;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 }

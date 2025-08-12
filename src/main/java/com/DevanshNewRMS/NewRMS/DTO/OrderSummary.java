@@ -8,14 +8,13 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor  // This will generate the constructor we need
+@AllArgsConstructor
 public class OrderSummary {
-
     private Long orderId;
     private LocalDateTime orderTime;
     private String staffName;
     private Integer tableNumber;
-    private Double totalOrderAmount;
-
-
+    private String customerName;
+    private String statusName;
+    private Double totalAmount;
 }
