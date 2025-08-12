@@ -16,14 +16,18 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "o.id, " +
             "o.orderTime, " +
             "s.name, " +
-            "t.tableNumber, " +
-            "SUM(oi.quantity * d.price)) " +
+            "COALESCE(t.tableNumber, 0), " +
+            "COALESCE(c.name, 'Walk-in'), " +
+            "os.statusName, " +
+            "COALESCE(SUM(oi.quantity * d.price), 0.0)) " +
             "FROM Order o " +
             "JOIN o.staff s " +
-            "JOIN o.tableInfo t " +
-            "JOIN o.orderItems oi " +
-            "JOIN oi.dish d " +
-            "GROUP BY o.id, o.orderTime, s.name, t.tableNumber " +
+            "LEFT JOIN o.tableInfo t " +
+            "LEFT JOIN o.customer c " +
+            "JOIN o.status os " +
+            "LEFT JOIN o.orderItems oi " +
+            "LEFT JOIN oi.dish d " +
+            "GROUP BY o.id, o.orderTime, s.name, t.tableNumber, c.name, os.statusName " +
             "ORDER BY o.orderTime DESC")
     List<OrderSummary> findOrderSummaries();
 

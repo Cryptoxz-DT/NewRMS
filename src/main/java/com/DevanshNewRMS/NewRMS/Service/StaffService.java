@@ -57,6 +57,20 @@ public class StaffService {
         staffRepository.deleteById(id);
     }
 
+    public Staff update(Long id, Staff staff) {
+        Staff existingStaff = getById(id);
+        existingStaff.setName(staff.getName());
+        existingStaff.setUsername(staff.getUsername());
+        existingStaff.setRoles(staff.getRoles());
+        
+        // Only encode password if it's being changed
+        if (staff.getPassword() != null && !staff.getPassword().isEmpty()) {
+            existingStaff.setPassword(passwordEncoder.encode(staff.getPassword()));
+        }
+        
+        return staffRepository.save(existingStaff);
+    }
+
     public String encodePassword(String rawPassword) {
         return passwordEncoder.encode(rawPassword);
     }
