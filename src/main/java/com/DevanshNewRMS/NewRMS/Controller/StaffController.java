@@ -10,7 +10,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/staff")
 public class StaffController {
-
     @Autowired
     private StaffService staffService;
 

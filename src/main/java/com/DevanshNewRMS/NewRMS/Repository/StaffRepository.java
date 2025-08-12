@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface StaffRepository extends JpaRepository<Staff, Long> {
     List<Staff> findByNameContainingIgnoreCase(String name);
-
     Optional<Staff> findByUsername(String username);
 }
+
