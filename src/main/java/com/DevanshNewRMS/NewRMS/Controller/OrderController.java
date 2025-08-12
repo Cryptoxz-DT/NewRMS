@@ -3,26 +3,30 @@ package com.DevanshNewRMS.NewRMS.Controller;
 import com.DevanshNewRMS.NewRMS.DTO.OrderSummary;
 import com.DevanshNewRMS.NewRMS.Service.OrderService;
 import com.DevanshNewRMS.NewRMS.Model.Order;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/order")
+@RequestMapping("/api/orders")
+@RequiredArgsConstructor
 public class OrderController {
-    @Autowired
-    private OrderService orderService;
+    
+    private final OrderService orderService;
 
     @PostMapping
-    public Order create(@RequestBody Order order){
-        return orderService.save(order);
+    public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order){
+        Order savedOrder = orderService.save(order);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedOrder);
     }
 
     @GetMapping
-    public List<Order> getAll(){
-        return orderService.getAll();
+    public ResponseEntity<List<Order>> getAllOrders(){
+        return ResponseEntity.ok(orderService.getAll());
     }
 
     @GetMapping("/summaries")
@@ -32,13 +36,13 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public Order getById(@PathVariable Long id){
-        return orderService.getById(id);
+    public ResponseEntity<Order> getOrderById(@PathVariable Long id){
+        return ResponseEntity.ok(orderService.getById(id));
     }
 
-
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id){
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long id){
         orderService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

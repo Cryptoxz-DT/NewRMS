@@ -4,26 +4,26 @@ import com.DevanshNewRMS.NewRMS.DTO.OrderSummary;
 import com.DevanshNewRMS.NewRMS.Exception.GlobalExceptionHandler;
 import com.DevanshNewRMS.NewRMS.Repository.OrderRepository;
 import com.DevanshNewRMS.NewRMS.Model.Order;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class OrderService {
-    @Autowired
-    private OrderRepository orderRepository;
-
-    public OrderService(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
-    }
+    
+    private final OrderRepository orderRepository;
 
     public List<OrderSummary> findOrderSummaries() {
-        // This line executes the complex query you created.
         return orderRepository.findOrderSummaries();
     }
 
     public Order save(Order order){
+        if (order.getOrderTime() == null) {
+            order.setOrderTime(LocalDateTime.now());
+        }
         return orderRepository.save(order);
     }
 
@@ -33,10 +33,13 @@ public class OrderService {
 
     public Order getById(Long id){
         return orderRepository.findById(id).orElseThrow(
-                ()-> new GlobalExceptionHandler.ResourceNotFoundException("Order not found with id:" + id));
+                ()-> new GlobalExceptionHandler.ResourceNotFoundException("Order not found with id: " + id));
     }
 
     public void delete(Long id){
+        if (!orderRepository.existsById(id)) {
+            throw new GlobalExceptionHandler.ResourceNotFoundException("Order not found with id: " + id);
+        }
         orderRepository.deleteById(id);
     }
 }

@@ -3,23 +3,37 @@ package com.DevanshNewRMS.NewRMS.Service;
 import com.DevanshNewRMS.NewRMS.Exception.GlobalExceptionHandler;
 import com.DevanshNewRMS.NewRMS.Repository.StaffRepository;
 import com.DevanshNewRMS.NewRMS.Model.Staff;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class StaffService {
-    @Autowired
-    private StaffRepository staffRepository;
-
-//    @Autowired // Fixed: Added missing autowired annotation
-//    private PasswordEncoder passwordEncoder;
+    
+    private final StaffRepository staffRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Staff save(Staff staff){
-//        staff.setPassword(passwordEncoder.encode(staff.getPassword()));
+        // Encode password before saving
+        staff.setPassword(passwordEncoder.encode(staff.getPassword()));
         return staffRepository.save(staff);
+    }
+
+    public Staff update(Long id, Staff staff) {
+        Staff existingStaff = getById(id);
+        existingStaff.setName(staff.getName());
+        existingStaff.setUsername(staff.getUsername());
+        existingStaff.setRoles(staff.getRoles());
+        
+        // Only encode password if it's being changed
+        if (staff.getPassword() != null && !staff.getPassword().isEmpty()) {
+            existingStaff.setPassword(passwordEncoder.encode(staff.getPassword()));
+        }
+        
+        return staffRepository.save(existingStaff);
     }
 
     public List<Staff> getAll(){
@@ -37,6 +51,13 @@ public class StaffService {
     }
 
     public void delete(long id){
+        if (!staffRepository.existsById(id)) {
+            throw new GlobalExceptionHandler.ResourceNotFoundException("Staff not found with id: " + id);
+        }
         staffRepository.deleteById(id);
+    }
+
+    public String encodePassword(String rawPassword) {
+        return passwordEncoder.encode(rawPassword);
     }
 }
