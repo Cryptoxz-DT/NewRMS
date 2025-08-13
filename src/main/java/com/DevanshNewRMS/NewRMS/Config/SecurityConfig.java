@@ -29,7 +29,7 @@ public class SecurityConfig {
 
     private final JpaUserDetailsService jpaUserDetailsService;
     
-    @Value("${app.cors.allowed-origins:http://localhost:3000}")
+    @Value("${app.cors.allowed-origins:http://localhost:3000,http://localhost:3001}")
     private String[] allowedOrigins;
 
     @Bean
