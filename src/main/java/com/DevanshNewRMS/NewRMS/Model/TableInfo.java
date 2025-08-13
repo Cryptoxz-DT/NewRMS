@@ -11,9 +11,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "table_info", indexes = {
-    @Index(name = "idx_table_number", columnList = "tableNumber", unique = true)
-})
+@Table(name = "table_info")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

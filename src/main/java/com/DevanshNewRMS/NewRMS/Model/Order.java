@@ -10,13 +10,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@Table(name = "order_table", indexes = {
-    @Index(name = "idx_order_time", columnList = "orderTime"),
-    @Index(name = "idx_order_table", columnList = "table_id"),
-    @Index(name = "idx_order_staff", columnList = "staff_id"),
-    @Index(name = "idx_order_customer", columnList = "customer_id"),
-    @Index(name = "idx_order_status", columnList = "status_id")
-})
+@Table(name = "order_table")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

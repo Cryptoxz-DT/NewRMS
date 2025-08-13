@@ -29,7 +29,7 @@ public class Ingredient {
 
     @NotNull(message = "Quantity in stock is required")
     @DecimalMin(value = "0.0", message = "Quantity cannot be negative")
-    @Column(name = "quantity_in_stock", nullable = false, precision = 10, scale = 2)
+    @Column(name = "quantity_in_stock", nullable = false)
     @Builder.Default
     private double quantityInStock = 0.0;
 

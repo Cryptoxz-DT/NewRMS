@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "dish_ingredient", 
-       uniqueConstraints = @UniqueConstraint(columnNames = {"dish_id", "ingredient_id"}))
+@Table(name = "dish_ingredient")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,10 +32,10 @@ public class DishIngredient {
 
     @NotNull(message = "Quantity is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Quantity must be greater than 0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false)
     private double quantity;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
-}   
+}

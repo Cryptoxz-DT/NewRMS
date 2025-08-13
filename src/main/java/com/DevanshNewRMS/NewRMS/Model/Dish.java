@@ -11,10 +11,7 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "dishes", indexes = {
-    @Index(name = "idx_dish_name", columnList = "name"),
-    @Index(name = "idx_dish_category", columnList = "category_id")
-})
+@Table(name = "dishes")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -32,7 +29,7 @@ public class Dish {
     @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     @DecimalMax(value = "99999.99", message = "Price cannot exceed 99999.99")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false)
     private double price;
 
     @NotNull(message = "Category is required")
