@@ -9,6 +9,7 @@ import Menu from './components/Menu';
 import Staff from './components/Staff';
 import Tables from './components/Tables';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import './App.css';
 
 function AppContent() {
@@ -69,9 +70,11 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
