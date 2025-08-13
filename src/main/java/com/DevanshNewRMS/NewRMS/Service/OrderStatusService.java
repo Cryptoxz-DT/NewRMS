@@ -8,5 +8,6 @@ public interface OrderStatusService {
     OrderStatus getOrderStatusById(Long id);
     OrderStatus saveOrderStatus(OrderStatus orderStatus);
     OrderStatus updateOrderStatus(Long id, OrderStatus orderStatus);
-    void deleteOrderStatus(Long id);
+    default void deleteOrderStatus(Long id) {
+    }
 }

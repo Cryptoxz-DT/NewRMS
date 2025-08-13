@@ -20,6 +20,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Order time is required")
     @Builder.Default
     private LocalDateTime orderTime = LocalDateTime.now();
 
