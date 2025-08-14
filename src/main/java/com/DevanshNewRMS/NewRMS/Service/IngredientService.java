@@ -17,6 +17,7 @@ public class IngredientService {
     private final IngredientRepository ingredientRepository;
 
     public List<Ingredient> getAllIngredients() {
+
         return ingredientRepository.findAll();
     }
 
@@ -39,6 +40,7 @@ public class IngredientService {
     }
 
     public List<Ingredient> getIngredientsByUnit(String unit) {
+
         return ingredientRepository.findByUnit(unit);
     }
 

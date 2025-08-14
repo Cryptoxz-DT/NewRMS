@@ -13,8 +13,11 @@ import java.util.List;
 
 @Service
 public class DishService {
-    @Autowired
-    private DishRepository dishRepository;
+    private final DishRepository dishRepository;
+
+    public DishService(DishRepository dishRepository) {
+        this.dishRepository = dishRepository;
+    }
 
     public Dish save(Dish dish) {
 

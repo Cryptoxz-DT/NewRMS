@@ -19,7 +19,7 @@ A modern, minimalistic React frontend for the Restaurant Management System.
 - **React 18**: Modern React with hooks
 - **React Router**: Client-side routing
 - **Axios**: HTTP client for API calls
-- **Lucide React**: Beautiful, customizable icons
+- **Lucid React**: Beautiful, customizable icons
 - **CSS3**: Modern styling with CSS Grid and Flexbox
 
 ## Getting Started
@@ -27,7 +27,7 @@ A modern, minimalistic React frontend for the Restaurant Management System.
 ### Prerequisites
 
 - Node.js 16+ and npm
-- Backend API running (default: http://localhost:8081)
+- Backend API running (default: http://localhost:8085)
 
 ### Installation
 
