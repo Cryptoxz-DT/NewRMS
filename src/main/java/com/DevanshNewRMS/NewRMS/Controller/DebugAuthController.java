@@ -68,8 +68,8 @@ public class DebugAuthController {
 
     @PostMapping("/create-test-user")
     public Staff createTestUser(@RequestBody Map<String, String> request) {
-        String username = request.getOrDefault("username", "testuser");
-        String password = request.getOrDefault("password", "testpass");
+        String username = request.getOrDefault("username", "tester");
+        String password = request.getOrDefault("password", "test pass");
         String name = request.getOrDefault("name", "Test User");
         String roles = request.getOrDefault("roles", "USER");
 

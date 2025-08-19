@@ -180,7 +180,8 @@
 				</configuration>
 			</plugin>
 			<!-- Testing plugins disabled -->
-			<!-- Maven Surefire Plugin - Skip Tests -->
+			<!-- Maven Surefire Plugin - Skip Tests
+			 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -229,7 +230,7 @@
 									<limits>
 										<limit>
 											<counter>LINE</counter>
-											<value>COVEREDRATIO</value>
+											<value>COVERED RATIO</value>
 											<minimum>0.70</minimum>
 										</limit>
 									</limits>
