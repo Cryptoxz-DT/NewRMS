@@ -1,0 +1,154 @@
+# NewRMS Sign-Up API Test Cases
+# Use this file with REST clients like IntelliJ HTTP Client, Postman, or curl
+
+### 1. Get Sign-Up Form Structure
+GET http://localhost:8080/api/test/signup-form
+Content-Type: application/json
+
+### 2. Check Username Availability (Available)
+GET http://localhost:8080/api/auth/check-username?username=newuser123
+Content-Type: application/json
+
+### 3. Check Username Availability (Taken - if admin exists)
+GET http://localhost:8080/api/auth/check-username?username=admin
+Content-Type: application/json
+
+### 4. Valid Sign-Up Request
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "username": "johndoe123",
+  "password": "SecurePass123!",
+  "confirmPassword": "SecurePass123!",
+  "roles": "WAITER"
+}
+
+### 5. Sign-Up with Weak Password
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Jane Smith",
+  "username": "janesmith",
+  "password": "password",
+  "confirmPassword": "password",
+  "roles": "CHEF"
+}
+
+### 6. Sign-Up with Password Mismatch
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Bob Wilson",
+  "username": "bobwilson",
+  "password": "SecurePass123!",
+  "confirmPassword": "DifferentPass456@",
+  "roles": "CASHIER"
+}
+
+### 7. Sign-Up with Invalid Name (Numbers)
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "name": "John123",
+  "username": "johnsmith",
+  "password": "SecurePass123!",
+  "confirmPassword": "SecurePass123!",
+  "roles": "MANAGER"
+}
+
+### 8. Sign-Up with Invalid Username (Special Characters)
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Alice Johnson",
+  "username": "alice@johnson",
+  "password": "SecurePass123!",
+  "confirmPassword": "SecurePass123!",
+  "roles": "ADMIN"
+}
+
+### 9. Sign-Up with Invalid Role
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Mike Brown",
+  "username": "mikebrown",
+  "password": "SecurePass123!",
+  "confirmPassword": "SecurePass123!",
+  "roles": "INVALID_ROLE"
+}
+
+### 10. Sign-Up with Multiple Roles
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Sarah Davis",
+  "username": "sarahdavis",
+  "password": "SecurePass123!",
+  "confirmPassword": "SecurePass123!",
+  "roles": "MANAGER,CASHIER"
+}
+
+### 11. Duplicate Username Test (Run after successful registration)
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Another John",
+  "username": "johndoe123",
+  "password": "AnotherPass456@",
+  "confirmPassword": "AnotherPass456@",
+  "roles": "WAITER"
+}
+
+### 12. Validate Sign-Up Data (Test Endpoint)
+POST http://localhost:8080/api/test/validate-signup
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "username": "testuser",
+  "password": "TestPass123!",
+  "confirmPassword": "TestPass123!",
+  "roles": "WAITER"
+}
+
+### 13. Rate Limiting Test (Run multiple times quickly)
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Rate Test User",
+  "username": "ratetest1",
+  "password": "RateTest123!",
+  "confirmPassword": "RateTest123!",
+  "roles": "WAITER"
+}
+
+### 14. Empty Fields Test
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "name": "",
+  "username": "",
+  "password": "",
+  "confirmPassword": "",
+  "roles": ""
+}
+
+### 15. Missing Fields Test
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Incomplete User"
+}
