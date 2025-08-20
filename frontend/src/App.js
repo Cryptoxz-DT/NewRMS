@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Login from './components/Login';
+import Signup from './components/Signup';
 import Dashboard from './components/Dashboard';
 import Orders from './components/Orders';
 import Customers from './components/Customers';
@@ -32,6 +33,10 @@ function AppContent() {
             <Route 
               path="/login" 
               element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />} 
+            />
+            <Route 
+              path="/signup" 
+              element={!isAuthenticated ? <Signup /> : <Navigate to="/dashboard" />} 
             />
             <Route 
               path="/dashboard" 

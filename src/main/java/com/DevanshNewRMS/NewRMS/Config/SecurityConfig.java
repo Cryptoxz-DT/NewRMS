@@ -46,13 +46,12 @@ public class SecurityConfig {
                             .httpStrictTransportSecurity(hsts -> hsts
                                     .maxAgeInSeconds(31536000)
                                     .includeSubDomains(true))
-                            .referrerPolicy(referrer ->
-                                    referrer.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN));
+                            .referrerPolicy(referrer -> referrer
+                                    .policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN));
                 })
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/signup", "/api/auth/check-username").permitAll()
-                        .anyRequest().permitAll()
-                )
+                        .anyRequest().permitAll())
                 .httpBasic(AbstractHttpConfigurer::disable); // Disable Basic Auth completely
 
         return http.build();

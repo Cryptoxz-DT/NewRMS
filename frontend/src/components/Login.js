@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { UtensilsCrossed, Eye, EyeOff } from 'lucide-react';
 import './Login.css';
@@ -109,6 +110,13 @@ const Login = () => {
         </form>
 
         <div className="login-footer">
+          <p>
+            Don't have an account?{' '}
+            <Link to="/signup" className="signup-link">
+              Sign Up
+            </Link>
+          </p>
+          <hr style={{ margin: '20px 0', border: 'none', borderTop: '1px solid #eee' }} />
           <p>Demo Credentials:</p>
           <p><strong>Username:</strong> admin</p>
           <p><strong>Password:</strong> password</p>
