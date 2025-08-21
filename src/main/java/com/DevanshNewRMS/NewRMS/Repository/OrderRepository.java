@@ -15,7 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT new com.DevanshNewRMS.NewRMS.DTO.OrderSummary(" +
             "o.id, " +
             "o.orderTime, " +
-            "s.name, " +
+            "CONCAT(s.firstName, ' ', s.lastName), " +
             "COALESCE(t.tableNumber, 0), " +
             "COALESCE(c.name, 'Walk-in'), " +
             "os.statusName, " +
@@ -27,7 +27,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "JOIN o.status os " +
             "LEFT JOIN o.orderItems oi " +
             "LEFT JOIN oi.dish d " +
-            "GROUP BY o.id, o.orderTime, s.name, t.tableNumber, c.name, os.statusName " +
+            "GROUP BY o.id, o.orderTime, s.firstName, s.lastName, t.tableNumber, c.name, os.statusName " +
             "ORDER BY o.orderTime DESC")
     List<OrderSummary> findOrderSummaries();
 

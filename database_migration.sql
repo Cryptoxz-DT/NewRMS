@@ -1,11 +1,11 @@
 -- Database migration script for enhanced Staff authentication system
 -- This script updates the staff table to support the new authentication features
 
--- Add new columns to staff table
+-- Step 1: Add new columns as nullable first
 ALTER TABLE staff 
 ADD COLUMN IF NOT EXISTS first_name VARCHAR(50),
 ADD COLUMN IF NOT EXISTS last_name VARCHAR(50),
-ADD COLUMN IF NOT EXISTS email VARCHAR(100) UNIQUE,
+ADD COLUMN IF NOT EXISTS email VARCHAR(100),
 ADD COLUMN IF NOT EXISTS account_locked BOOLEAN DEFAULT FALSE,
 ADD COLUMN IF NOT EXISTS failed_login_attempts INTEGER DEFAULT 0,
 ADD COLUMN IF NOT EXISTS last_login_attempt TIMESTAMP,
@@ -16,35 +16,55 @@ CREATE INDEX IF NOT EXISTS idx_staff_username ON staff(username);
 CREATE INDEX IF NOT EXISTS idx_staff_email ON staff(email);
 CREATE INDEX IF NOT EXISTS idx_staff_account_locked ON staff(account_locked);
 
--- Migrate existing data (if any)
+-- Step 2: Migrate existing data (if any)
 -- Update existing records to split name into first_name and last_name
 UPDATE staff 
 SET 
     first_name = CASE 
-        WHEN position(' ' in name) > 0 
+        WHEN name IS NOT NULL AND position(' ' in name) > 0 
         THEN substring(name from 1 for position(' ' in name) - 1)
-        ELSE name
+        WHEN name IS NOT NULL
+        THEN name
+        ELSE 'Unknown'
     END,
     last_name = CASE 
-        WHEN position(' ' in name) > 0 
+        WHEN name IS NOT NULL AND position(' ' in name) > 0 
         THEN substring(name from position(' ' in name) + 1)
-        ELSE ''
+        WHEN name IS NOT NULL
+        THEN 'User'
+        ELSE 'User'
     END,
     email = CASE 
         WHEN email IS NULL 
-        THEN username || '@example.com'
+        THEN username || '@newrms.local'
         ELSE email
     END,
+    account_locked = COALESCE(account_locked, FALSE),
+    failed_login_attempts = COALESCE(failed_login_attempts, 0),
     password_changed_at = COALESCE(password_changed_at, created_at, CURRENT_TIMESTAMP)
-WHERE first_name IS NULL OR last_name IS NULL;
+WHERE first_name IS NULL OR last_name IS NULL OR email IS NULL;
 
--- Add NOT NULL constraints after data migration
+-- Step 3: Add NOT NULL constraints after data migration
 ALTER TABLE staff 
 ALTER COLUMN first_name SET NOT NULL,
 ALTER COLUMN last_name SET NOT NULL,
-ALTER COLUMN email SET NOT NULL,
 ALTER COLUMN account_locked SET NOT NULL,
 ALTER COLUMN failed_login_attempts SET NOT NULL;
+
+-- Step 4: Add unique constraint on email after ensuring no duplicates
+-- First, handle any potential duplicate emails
+UPDATE staff 
+SET email = username || '_' || id || '@newrms.local'
+WHERE email IN (
+    SELECT email 
+    FROM staff 
+    GROUP BY email 
+    HAVING COUNT(*) > 1
+);
+
+-- Now add the unique constraint
+ALTER TABLE staff 
+ADD CONSTRAINT uk_staff_email UNIQUE (email);
 
 -- Update roles to include STAFF if needed
 UPDATE staff 

@@ -74,7 +74,7 @@ public class DebugAuthController {
         String roles = request.getOrDefault("roles", "USER");
 
         Staff staff = Staff.builder()
-                .name(name)
+                .firstName(name)
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .roles(roles)

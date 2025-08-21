@@ -101,6 +101,17 @@ public class StaffService {
         String sanitizedUsername = sanitizeInput(signUpRequest.getUsername());
         String sanitizedRoles = sanitizeInput(signUpRequest.getRoles());
         
+        // Validate required fields for new registrations
+        if (sanitizedFirstName == null || sanitizedFirstName.trim().isEmpty()) {
+            throw new GlobalExceptionHandler.BusinessException("First name is required");
+        }
+        if (sanitizedLastName == null || sanitizedLastName.trim().isEmpty()) {
+            throw new GlobalExceptionHandler.BusinessException("Last name is required");
+        }
+        if (sanitizedEmail == null || sanitizedEmail.trim().isEmpty()) {
+            throw new GlobalExceptionHandler.BusinessException("Email is required");
+        }
+        
         // Create new staff member
         Staff staff = Staff.builder()
                 .firstName(sanitizedFirstName)

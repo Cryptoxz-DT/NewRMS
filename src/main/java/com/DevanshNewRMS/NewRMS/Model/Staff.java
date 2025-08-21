@@ -22,20 +22,17 @@ public class Staff {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "First name is required")
     @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "first_name")
     private String firstName;
 
-    @NotBlank(message = "Last name is required")
     @Size(min = 2, max = 50, message = "Last name must be between 2 and 50 characters")
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name")
     private String lastName;
 
     @Email(message = "Email should be valid")
-    @NotBlank(message = "Email is required")
     @Size(max = 100, message = "Email must not exceed 100 characters")
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String email;
     
     @NotBlank(message = "Username is required")
@@ -54,11 +51,11 @@ public class Staff {
     @Column(nullable = false)
     private String roles;
 
-    @Column(name = "account_locked", nullable = false)
+    @Column(name = "account_locked")
     @Builder.Default
     private Boolean accountLocked = false;
 
-    @Column(name = "failed_login_attempts", nullable = false)
+    @Column(name = "failed_login_attempts")
     @Builder.Default
     private Integer failedLoginAttempts = 0;
 
@@ -86,7 +83,15 @@ public class Staff {
     }
 
     public String getName() {
-        return this.firstName + " " + this.lastName;
+        if (this.firstName != null && this.lastName != null) {
+            return this.firstName + " " + this.lastName;
+        } else if (this.firstName != null) {
+            return this.firstName;
+        } else if (this.lastName != null) {
+            return this.lastName;
+        } else {
+            return this.username; // fallback to username
+        }
     }
 
     @PreUpdate

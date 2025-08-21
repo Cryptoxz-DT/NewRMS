@@ -43,4 +43,8 @@ public class SignUpRequest {
     @Pattern(regexp = "^(ADMIN|MANAGER|STAFF|WAITER|CHEF|CASHIER)(,(ADMIN|MANAGER|STAFF|WAITER|CHEF|CASHIER))*$", 
              message = "Invalid role format. Allowed roles: ADMIN, MANAGER, STAFF, WAITER, CHEF, CASHIER")
     private String roles;
+
+    public String getName() {
+        return getFirstName() + " " + getLastName();
+    }
 }
