@@ -30,13 +30,16 @@ public class StaffService {
 
     public Staff update(Long id, Staff staff) {
         Staff existingStaff = getById(id);
-        existingStaff.setName(staff.getName());
+        existingStaff.setFirstName(staff.getFirstName());
+        existingStaff.setLastName(staff.getLastName());
+        existingStaff.setEmail(staff.getEmail());
         existingStaff.setUsername(staff.getUsername());
         existingStaff.setRoles(staff.getRoles());
         
         // Only encode password if it's being changed
         if (staff.getPassword() != null && !staff.getPassword().isEmpty()) {
             existingStaff.setPassword(passwordEncoder.encode(staff.getPassword()));
+            existingStaff.setPasswordChangedAt(LocalDateTime.now());
         }
         
         return staffRepository.save(existingStaff);
@@ -53,7 +56,7 @@ public class StaffService {
     }
 
     public List<Staff> getStaffName(String name){
-        return staffRepository.findByNameContainingIgnoreCase(name);
+        return staffRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(name, name);
     }
 
     public void delete(long id){
@@ -70,7 +73,8 @@ public class StaffService {
 
     @Transactional
     public Staff registerUser(SignUpRequest signUpRequest) {
-        log.info("Attempting to register user with username: {}", signUpRequest.getUsername());
+        log.info("Attempting to register user with username: {} and email: {}", 
+                signUpRequest.getUsername(), signUpRequest.getEmail());
         
         // Validate password confirmation
         validatePasswordConfirmation(signUpRequest.getPassword(), signUpRequest.getConfirmPassword());
@@ -84,27 +88,42 @@ public class StaffService {
             throw new GlobalExceptionHandler.UserAlreadyExistsException("Username is already taken");
         }
         
+        // Check if email already exists
+        if (staffRepository.findByEmail(signUpRequest.getEmail()).isPresent()) {
+            log.warn("Registration attempt failed - email already exists: {}", signUpRequest.getEmail());
+            throw new GlobalExceptionHandler.UserAlreadyExistsException("Email is already registered");
+        }
+        
         // Sanitize and validate input
-        String sanitizedName = sanitizeInput(signUpRequest.getName());
+        String sanitizedFirstName = sanitizeInput(signUpRequest.getFirstName());
+        String sanitizedLastName = sanitizeInput(signUpRequest.getLastName());
+        String sanitizedEmail = sanitizeInput(signUpRequest.getEmail().toLowerCase());
         String sanitizedUsername = sanitizeInput(signUpRequest.getUsername());
         String sanitizedRoles = sanitizeInput(signUpRequest.getRoles());
         
         // Create new staff member
         Staff staff = Staff.builder()
-                .name(sanitizedName)
+                .firstName(sanitizedFirstName)
+                .lastName(sanitizedLastName)
+                .email(sanitizedEmail)
                 .username(sanitizedUsername)
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
                 .roles(sanitizedRoles)
+                .accountLocked(false)
+                .failedLoginAttempts(0)
+                .passwordChangedAt(LocalDateTime.now())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
         
         try {
             Staff savedStaff = staffRepository.save(staff);
-            log.info("User registered successfully with ID: {} and username: {}", savedStaff.getId(), savedStaff.getUsername());
+            log.info("User registered successfully with ID: {}, username: {}, and email: {}", 
+                    savedStaff.getId(), savedStaff.getUsername(), savedStaff.getEmail());
             return savedStaff;
         } catch (Exception e) {
-            log.error("Failed to register user with username: {}", signUpRequest.getUsername(), e);
+            log.error("Failed to register user with username: {} and email: {}", 
+                    signUpRequest.getUsername(), signUpRequest.getEmail(), e);
             throw new GlobalExceptionHandler.BusinessException("Registration failed due to system error");
         }
     }

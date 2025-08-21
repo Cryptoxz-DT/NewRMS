@@ -7,7 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StaffRepository extends JpaRepository<Staff, Long> {
-    List<Staff> findByNameContainingIgnoreCase(String name);
+    List<Staff> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(String firstName, String lastName);
 
     Optional<Staff> findByUsername(String username);
+    
+    Optional<Staff> findByEmail(String email);
+    
+    Optional<Staff> findByUsernameOrEmail(String username, String email);
 }

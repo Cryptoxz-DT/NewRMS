@@ -5,13 +5,13 @@ import './Login.css'; // Reusing login styles
 
 const Signup = () => {
   const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
     username: '',
     password: '',
     confirmPassword: '',
-    email: '',
-    firstName: '',
-    lastName: '',
-    role: 'STAFF'
+    roles: 'STAFF'
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -59,12 +59,13 @@ const Signup = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: formData.username,
-          password: formData.password,
-          email: formData.email,
           firstName: formData.firstName,
           lastName: formData.lastName,
-          role: formData.role
+          email: formData.email,
+          username: formData.username,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword,
+          roles: formData.roles
         }),
       });
 
@@ -188,19 +189,22 @@ const Signup = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="role" className="form-label">
+            <label htmlFor="roles" className="form-label">
               Role
             </label>
             <select
-              id="role"
-              name="role"
-              value={formData.role}
+              id="roles"
+              name="roles"
+              value={formData.roles}
               onChange={handleChange}
               className="form-input"
               required
               disabled={loading}
             >
               <option value="STAFF">Staff</option>
+              <option value="WAITER">Waiter</option>
+              <option value="CHEF">Chef</option>
+              <option value="CASHIER">Cashier</option>
               <option value="MANAGER">Manager</option>
               <option value="ADMIN">Admin</option>
             </select>

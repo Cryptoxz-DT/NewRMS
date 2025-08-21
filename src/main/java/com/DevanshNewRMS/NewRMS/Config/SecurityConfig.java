@@ -50,9 +50,11 @@ public class SecurityConfig {
                                     .policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN));
                 })
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/signup", "/api/auth/check-username").permitAll()
-                        .anyRequest().permitAll())
-                .httpBasic(AbstractHttpConfigurer::disable); // Disable Basic Auth completely
+                        .requestMatchers("/api/auth/login", "/api/auth/signup", "/api/auth/check-username").permitAll()
+                        .requestMatchers("/api/auth/user", "/api/auth/logout").authenticated()
+                        .anyRequest().authenticated())
+                .userDetailsService(jpaUserDetailsService)
+                .httpBasic(httpBasic -> httpBasic.realmName("NewRMS"));
 
         return http.build();
     }

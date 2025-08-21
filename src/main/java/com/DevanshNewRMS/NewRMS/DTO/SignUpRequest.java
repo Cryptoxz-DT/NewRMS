@@ -10,10 +10,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SignUpRequest {
     
-    @NotBlank(message = "Name is required")
-    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
-    @Pattern(regexp = "^[a-zA-Z\\s'-]+$", message = "Name can only contain letters, spaces, hyphens, and apostrophes")
-    private String name;
+    @NotBlank(message = "First name is required")
+    @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
+    @Pattern(regexp = "^[a-zA-Z\\s'-]+$", message = "First name can only contain letters, spaces, hyphens, and apostrophes")
+    private String firstName;
+
+    @NotBlank(message = "Last name is required")
+    @Size(min = 2, max = 50, message = "Last name must be between 2 and 50 characters")
+    @Pattern(regexp = "^[a-zA-Z\\s'-]+$", message = "Last name can only contain letters, spaces, hyphens, and apostrophes")
+    private String lastName;
+
+    @Email(message = "Email should be valid")
+    @NotBlank(message = "Email is required")
+    @Size(max = 100, message = "Email must not exceed 100 characters")
+    private String email;
     
     @NotBlank(message = "Username is required")
     @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
@@ -30,7 +40,7 @@ public class SignUpRequest {
     private String confirmPassword;
     
     @NotBlank(message = "Role is required")
-    @Pattern(regexp = "^(ADMIN|MANAGER|WAITER|CHEF|CASHIER)(,(ADMIN|MANAGER|WAITER|CHEF|CASHIER))*$", 
-             message = "Invalid role format. Allowed roles: ADMIN, MANAGER, WAITER, CHEF, CASHIER")
+    @Pattern(regexp = "^(ADMIN|MANAGER|STAFF|WAITER|CHEF|CASHIER)(,(ADMIN|MANAGER|STAFF|WAITER|CHEF|CASHIER))*$", 
+             message = "Invalid role format. Allowed roles: ADMIN, MANAGER, STAFF, WAITER, CHEF, CASHIER")
     private String roles;
 }

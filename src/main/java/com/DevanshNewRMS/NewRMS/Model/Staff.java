@@ -1,6 +1,7 @@
 package com.DevanshNewRMS.NewRMS.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -8,7 +9,10 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "staff")
+@Table(name = "staff", indexes = {
+    @Index(name = "idx_staff_username", columnList = "username"),
+    @Index(name = "idx_staff_email", columnList = "email")
+})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,10 +22,21 @@ public class Staff {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Name is required")
-    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
-    @Column(nullable = false)
-    private String name;
+    @NotBlank(message = "First name is required")
+    @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
+
+    @NotBlank(message = "Last name is required")
+    @Size(min = 2, max = 50, message = "Last name must be between 2 and 50 characters")
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
+
+    @Email(message = "Email should be valid")
+    @NotBlank(message = "Email is required")
+    @Size(max = 100, message = "Email must not exceed 100 characters")
+    @Column(nullable = false, unique = true)
+    private String email;
     
     @NotBlank(message = "Username is required")
     @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
@@ -34,18 +49,25 @@ public class Staff {
     private String password;
     
     @NotBlank(message = "Role is required")
-    @Pattern(regexp = "^(ADMIN|MANAGER|WAITER|CHEF|CASHIER)(,(ADMIN|MANAGER|WAITER|CHEF|CASHIER))*$", 
+    @Pattern(regexp = "^(ADMIN|MANAGER|STAFF|WAITER|CHEF|CASHIER)(,(ADMIN|MANAGER|STAFF|WAITER|CHEF|CASHIER))*$", 
              message = "Invalid role format")
     @Column(nullable = false)
     private String roles;
 
-    public String getRole() {
-        return this.roles;
-    }
+    @Column(name = "account_locked", nullable = false)
+    @Builder.Default
+    private Boolean accountLocked = false;
 
-    public void setRole(String role) {
-        this.roles = role;
-    }
+    @Column(name = "failed_login_attempts", nullable = false)
+    @Builder.Default
+    private Integer failedLoginAttempts = 0;
+
+    @Column(name = "last_login_attempt")
+    private LocalDateTime lastLoginAttempt;
+
+    @Column(name = "password_changed_at")
+    @Builder.Default
+    private LocalDateTime passwordChangedAt = LocalDateTime.now();
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default
@@ -55,8 +77,34 @@ public class Staff {
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    public String getRole() {
+        return this.roles;
+    }
+
+    public void setRole(String role) {
+        this.roles = role;
+    }
+
+    public String getName() {
+        return this.firstName + " " + this.lastName;
+    }
+
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void incrementFailedLoginAttempts() {
+        this.failedLoginAttempts++;
+        this.lastLoginAttempt = LocalDateTime.now();
+        if (this.failedLoginAttempts >= 5) {
+            this.accountLocked = true;
+        }
+    }
+
+    public void resetFailedLoginAttempts() {
+        this.failedLoginAttempts = 0;
+        this.accountLocked = false;
+        this.lastLoginAttempt = LocalDateTime.now();
     }
 }
