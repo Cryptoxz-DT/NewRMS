@@ -1,16 +1,11 @@
 package com.DevanshNewRMS.NewRMS.Controller;
 
-import com.DevanshNewRMS.NewRMS.DTO.LoginRequest;
-import com.DevanshNewRMS.NewRMS.DTO.LoginResponse;
-import com.DevanshNewRMS.NewRMS.DTO.SignUpRequest;
-import com.DevanshNewRMS.NewRMS.DTO.SignUpResponse;
+import com.DevanshNewRMS.NewRMS.DTO.*;
+import com.DevanshNewRMS.NewRMS.Model.RefreshToken;
 import com.DevanshNewRMS.NewRMS.Exception.GlobalExceptionHandler;
 import com.DevanshNewRMS.NewRMS.Model.Staff;
 import com.DevanshNewRMS.NewRMS.Repository.StaffRepository;
-import com.DevanshNewRMS.NewRMS.Service.AuthenticationService;
-import com.DevanshNewRMS.NewRMS.Service.RateLimitingService;
-import com.DevanshNewRMS.NewRMS.Service.SecurityAuditService;
-import com.DevanshNewRMS.NewRMS.Service.StaffService;
+import com.DevanshNewRMS.NewRMS.Service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -36,6 +32,8 @@ public class AuthController {
     private final AuthenticationService authenticationService;
     private final RateLimitingService rateLimitingService;
     private final SecurityAuditService securityAuditService;
+    private final JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
 
     @GetMapping("/user")
     public ResponseEntity<Map<String, Object>> getCurrentUser() {
@@ -84,20 +82,17 @@ public class AuthController {
             // Record the attempt for rate limiting
             rateLimitingService.recordAttempt(clientIp);
             
-            // Authenticate user
-            Authentication authentication = authenticationService.authenticate(
+            // Authenticate user and get JWT tokens
+            AuthenticationService.AuthenticationResult authResult = authenticationService.authenticate(
                 loginRequest.getUsernameOrEmail(), 
                 loginRequest.getPassword(),
-                clientIp
+                clientIp,
+                request.getHeader("User-Agent")
             );
             
-            // Get user details
-            Staff staff = staffRepository.findByUsernameOrEmail(
-                loginRequest.getUsernameOrEmail(), 
-                loginRequest.getUsernameOrEmail()
-            ).orElseThrow(() -> new GlobalExceptionHandler.ResourceNotFoundException("User not found"));
+            Staff staff = authResult.getStaff();
             
-            // Create success response
+            // Create success response with JWT tokens
             LoginResponse response = LoginResponse.success(
                 staff.getId(),
                 staff.getFirstName(),
@@ -105,7 +100,10 @@ public class AuthController {
                 staff.getEmail(),
                 staff.getUsername(),
                 java.util.Arrays.asList(staff.getRoles().split(",")),
-                staff.getLastLoginAttempt()
+                staff.getLastLoginAttempt(),
+                authResult.getAccessToken(),
+                authResult.getRefreshToken(),
+                authResult.getExpiresIn()
             );
             
             securityAuditService.logLoginAttempt(staff.getUsername(), clientIp, true, "Login successful");
@@ -143,8 +141,100 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@Valid @RequestBody TokenRefreshRequest request,
+                                         HttpServletRequest httpRequest) {
+        
+        String clientIp = getClientIpAddress(httpRequest);
+        String userAgent = httpRequest.getHeader("User-Agent");
+        
+        log.info("Token refresh attempt from IP: {}", clientIp);
+        
+        try {
+            // Find and verify refresh token
+            RefreshToken refreshToken = refreshTokenService.findByToken(request.getRefreshToken())
+                    .orElseThrow(() -> new GlobalExceptionHandler.TokenRefreshException("Refresh token not found"));
+            
+            refreshToken = refreshTokenService.verifyExpiration(refreshToken);
+            
+            // Generate new access token
+            Staff staff = refreshToken.getStaff();
+            org.springframework.security.core.userdetails.UserDetails userDetails = 
+                org.springframework.security.core.userdetails.User.builder()
+                    .username(staff.getUsername())
+                    .password(staff.getPassword())
+                    .authorities(staff.getRoles().split(","))
+                    .build();
+            
+            String newAccessToken = jwtService.generateToken(userDetails);
+            
+            // Rotate refresh token for better security
+            RefreshToken newRefreshToken = refreshTokenService.rotateRefreshToken(refreshToken, clientIp, userAgent);
+            
+            TokenRefreshResponse response = TokenRefreshResponse.success(
+                newAccessToken,
+                newRefreshToken.getToken(),
+                jwtService.getExpirationTime()
+            );
+            
+            securityAuditService.logSuspiciousActivity(
+                    staff.getUsername(), 
+                    clientIp, 
+                    "TOKEN_REFRESHED", 
+                    "Access token refreshed successfully"
+            );
+            
+            log.info("Token refreshed successfully for user: {}", staff.getUsername());
+            return ResponseEntity.ok(response);
+            
+        } catch (GlobalExceptionHandler.TokenRefreshException e) {
+            log.warn("Token refresh failed from IP: {} - {}", clientIp, e.getMessage());
+            
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Token Refresh Failed");
+            errorResponse.put("message", e.getMessage());
+            
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+            
+        } catch (Exception e) {
+            log.error("Unexpected error during token refresh from IP: {}", clientIp, e);
+            
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Internal Server Error");
+            errorResponse.put("message", "Token refresh failed due to system error");
+            
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
     @PostMapping("/logout")
-    public ResponseEntity<Map<String, String>> logout() {
+    public ResponseEntity<Map<String, String>> logout(HttpServletRequest request) {
+        try {
+            // Extract JWT token from Authorization header
+            String authHeader = request.getHeader("Authorization");
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String jwt = authHeader.substring(7);
+                String username = jwtService.extractUsername(jwt);
+                
+                // Find staff and revoke all refresh tokens
+                Optional<Staff> staffOptional = staffRepository.findByUsername(username);
+                if (staffOptional.isPresent()) {
+                    refreshTokenService.revokeAllTokensForStaff(staffOptional.get());
+                    
+                    securityAuditService.logSuspiciousActivity(
+                            username, 
+                            getClientIpAddress(request), 
+                            "USER_LOGOUT", 
+                            "User logged out successfully"
+                    );
+                    
+                    log.info("User logged out successfully: {}", username);
+                }
+            }
+        } catch (Exception e) {
+            log.warn("Error during logout process: {}", e.getMessage());
+        }
+        
         Map<String, String> response = new HashMap<>();
         response.put("message", "Logged out successfully");
         return ResponseEntity.ok(response);

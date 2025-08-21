@@ -1,6 +1,7 @@
 package com.DevanshNewRMS.NewRMS.Service;
 
 import com.DevanshNewRMS.NewRMS.Exception.GlobalExceptionHandler;
+import com.DevanshNewRMS.NewRMS.Model.RefreshToken;
 import com.DevanshNewRMS.NewRMS.Model.Staff;
 import com.DevanshNewRMS.NewRMS.Repository.StaffRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +28,11 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final SecurityAuditService securityAuditService;
+    private final JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
 
     @Transactional
-    public Authentication authenticate(String usernameOrEmail, String password, String clientIp) {
+    public AuthenticationResult authenticate(String usernameOrEmail, String password, String clientIp, String userAgent) {
         log.info("Authentication attempt for user: {}", usernameOrEmail);
         
         // Find user by username or email
@@ -58,8 +61,25 @@ public class AuthenticationService {
             staff.resetFailedLoginAttempts();
             staffRepository.save(staff);
             
+            // Generate JWT tokens
+            String accessToken = jwtService.generateToken(authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.UserDetails 
+                ? (org.springframework.security.core.userdetails.UserDetails) authentication.getPrincipal() 
+                : org.springframework.security.core.userdetails.User.builder()
+                    .username(staff.getUsername())
+                    .password(staff.getPassword())
+                    .authorities(staff.getRoles().split(","))
+                    .build());
+            
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(staff, clientIp, userAgent);
+            
             log.info("Authentication successful for user: {}", usernameOrEmail);
-            return authentication;
+            
+            return AuthenticationResult.builder()
+                    .staff(staff)
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken.getToken())
+                    .expiresIn(jwtService.getExpirationTime())
+                    .build();
             
         } catch (AuthenticationException e) {
             // Increment failed login attempts
@@ -76,6 +96,18 @@ public class AuthenticationService {
             
             throw new BadCredentialsException("Invalid username/email or password");
         }
+    }
+
+    /**
+     * Authentication result containing tokens and user info
+     */
+    @lombok.Data
+    @lombok.Builder
+    public static class AuthenticationResult {
+        private Staff staff;
+        private String accessToken;
+        private String refreshToken;
+        private Long expiresIn;
     }
     
     @Transactional

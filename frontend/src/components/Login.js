@@ -29,10 +29,44 @@ const Login = () => {
     setLoading(true);
     setError('');
 
-    const result = await login(credentials.username, credentials.password);
-    
-    if (!result.success) {
-      setError(result.error);
+    try {
+      const response = await fetch('http://localhost:8085/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          usernameOrEmail: credentials.username,
+          password: credentials.password
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store JWT tokens
+        localStorage.setItem('accessToken', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken);
+        localStorage.setItem('user', JSON.stringify({
+          id: data.id,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          username: data.username,
+          roles: data.roles
+        }));
+        
+        // Call the login function from context
+        const result = await login(credentials.username, credentials.password);
+        
+        if (!result.success) {
+          setError(result.error);
+        }
+      } else {
+        setError(data.message || 'Login failed');
+      }
+    } catch (error) {
+      setError('Network error. Please try again.');
     }
     
     setLoading(false);

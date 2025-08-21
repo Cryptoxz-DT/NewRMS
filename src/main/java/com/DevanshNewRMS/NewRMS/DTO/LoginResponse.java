@@ -22,9 +22,14 @@ public class LoginResponse {
     private List<String> roles;
     private LocalDateTime lastLogin;
     private String message;
+    private String accessToken;
+    private String refreshToken;
+    private String tokenType = "Bearer";
+    private Long expiresIn;
     
     public static LoginResponse success(Long id, String firstName, String lastName, String email, 
-                                      String username, List<String> roles, LocalDateTime lastLogin) {
+                                      String username, List<String> roles, LocalDateTime lastLogin,
+                                      String accessToken, String refreshToken, Long expiresIn) {
         return LoginResponse.builder()
                 .id(id)
                 .firstName(firstName)
@@ -33,6 +38,10 @@ public class LoginResponse {
                 .username(username)
                 .roles(roles)
                 .lastLogin(lastLogin)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .tokenType("Bearer")
+                .expiresIn(expiresIn)
                 .message("Login successful")
                 .build();
     }
