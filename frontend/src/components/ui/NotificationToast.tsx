@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle, AlertCircle, AlertTriangle, Info } from 'lucide-react';
-import { useUIStore } from '@/store/uiStore';
-import { cn } from '@/utils';
+import { useUIStore } from '../../store/uiStore';
+import { cn } from '../../utils';
 import Button from './Button';
 
 const NotificationToast: React.FC = () => {

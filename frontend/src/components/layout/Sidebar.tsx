@@ -13,10 +13,10 @@ import {
   Menu,
   X,
 } from 'lucide-react';
-import { useUIStore } from '@/store/uiStore';
-import { useAuth } from '@/hooks/useAuth';
-import { cn } from '@/utils';
-import Button from '@/components/ui/Button';
+import { useUIStore } from '../../store/uiStore';
+import { useAuth } from '../../hooks/useAuth';
+import { cn } from '../../utils';
+import Button from '../ui/Button';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },

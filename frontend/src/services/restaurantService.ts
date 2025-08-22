@@ -8,7 +8,7 @@ import {
   DashboardStats,
   PaginatedResponse,
   ApiResponse,
-} from '@/types';
+} from '../types';
 
 export const restaurantService = {
   // Orders

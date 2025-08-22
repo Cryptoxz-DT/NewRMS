@@ -10,10 +10,10 @@ import {
   ChefHat,
   Calendar,
 } from 'lucide-react';
-import { useDashboard } from '@/hooks/useRestaurant';
-import { formatCurrency, formatRelativeTime } from '@/utils';
-import Card from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
+import { useDashboard } from '../hooks/useRestaurant';
+import { formatCurrency, formatRelativeTime } from '../utils';
+import Card from './ui/Card';
+import Button from './ui/Button';
 import {
   LineChart,
   Line,

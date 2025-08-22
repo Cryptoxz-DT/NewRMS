@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, AlertCircle } from 'lucide-react';
-import { cn } from '@/utils';
+import { cn } from '../../utils';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;

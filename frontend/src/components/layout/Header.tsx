@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Bell, Search, Sun, Moon, Menu } from 'lucide-react';
-import { useUIStore } from '@/store/uiStore';
-import { useAuth } from '@/hooks/useAuth';
-import { cn } from '@/utils';
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
+import { useUIStore } from '../../store/uiStore';
+import { useAuth } from '../../hooks/useAuth';
+import { cn } from '../../utils';
+import Button from '../ui/Button';
+import Input from '../ui/Input';
 
 const Header: React.FC = () => {
   const { theme, toggleTheme, setSidebarOpen, notifications } = useUIStore();

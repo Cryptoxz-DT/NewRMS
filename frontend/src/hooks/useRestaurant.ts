@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { restaurantService } from '@/services/restaurantService';
-import { useRestaurantStore } from '@/store/restaurantStore';
-import { useUIStore } from '@/store/uiStore';
-import { Order, Table, MenuItem, Customer, Reservation } from '@/types';
+import { restaurantService } from '../services/restaurantService';
+import { useRestaurantStore } from '../store/restaurantStore';
+import { useUIStore } from '../store/uiStore';
+import { Order, Table, MenuItem, Customer, Reservation } from '../types';
 
 export const useOrders = (params?: any) => {
   const queryClient = useQueryClient();

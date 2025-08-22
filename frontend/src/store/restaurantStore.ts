@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Order, Table, MenuItem, Customer, DashboardStats } from '@/types';
+import { Order, Table, MenuItem, Customer, DashboardStats } from '../types';
 
 interface RestaurantState {
   // Orders

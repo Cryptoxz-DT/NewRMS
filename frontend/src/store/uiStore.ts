@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { NotificationState, ThemeConfig } from '@/types';
+import { NotificationState, ThemeConfig } from '../types';
 
 interface UIState {
   theme: ThemeConfig;

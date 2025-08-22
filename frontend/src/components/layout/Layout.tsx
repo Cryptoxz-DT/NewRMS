@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Outlet } from 'react-router-dom';
-import { useUIStore } from '@/store/uiStore';
-import { cn } from '@/utils';
+import { useUIStore } from '../../store/uiStore';
+import { cn } from '../../utils';
 import Sidebar from './Sidebar';
 import Header from './Header';
-import NotificationToast from '@/components/ui/NotificationToast';
+import NotificationToast from '../ui/NotificationToast';
 
 const Layout: React.FC = () => {
   const { sidebarOpen, theme } = useUIStore();
