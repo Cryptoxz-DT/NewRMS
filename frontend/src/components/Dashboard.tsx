@@ -273,7 +273,7 @@ const Dashboard: React.FC = () => {
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-            </Card.Content>
+            </div>
           </Card>
         </motion.div>
       </div>
@@ -283,13 +283,15 @@ const Dashboard: React.FC = () => {
         {/* Popular Items */}
         <motion.div variants={itemVariants} className="lg:col-span-2">
           <Card variant="elevated" padding="lg">
-            <Card.Header>
-              <Card.Title>Popular Menu Items</Card.Title>
-              <Card.Description>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-secondary-900 dark:text-secondary-100">
+                Popular Menu Items
+              </h3>
+              <p className="text-sm text-secondary-600 dark:text-secondary-400 mt-1">
                 Top selling items this week
-              </Card.Description>
-            </Card.Header>
-            <Card.Content>
+              </p>
+            </div>
+            <div>
               <div className="space-y-4">
                 {popularItems.map((item, index) => (
                   <div
@@ -320,20 +322,22 @@ const Dashboard: React.FC = () => {
                   </div>
                 ))}
               </div>
-            </Card.Content>
+            </div>
           </Card>
         </motion.div>
 
         {/* Recent Activity */}
         <motion.div variants={itemVariants}>
           <Card variant="elevated" padding="lg">
-            <Card.Header>
-              <Card.Title>Recent Activity</Card.Title>
-              <Card.Description>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-secondary-900 dark:text-secondary-100">
+                Recent Activity
+              </h3>
+              <p className="text-sm text-secondary-600 dark:text-secondary-400 mt-1">
                 Latest updates from your restaurant
-              </Card.Description>
-            </Card.Header>
-            <Card.Content>
+              </p>
+            </div>
+            <div>
               <div className="space-y-4">
                 {[
                   {
@@ -380,7 +384,7 @@ const Dashboard: React.FC = () => {
                   </div>
                 ))}
               </div>
-            </Card.Content>
+            </div>
           </Card>
         </motion.div>
       </div>

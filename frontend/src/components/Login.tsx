@@ -3,12 +3,13 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { User, Lock, ChefHat } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import { LoginRequest } from '../types';
 import Button from './ui/Button';
 import Input from './ui/Input';
 import Card from './ui/Card';
 
 const Login: React.FC = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<LoginRequest>({
     username: '',
     password: '',
   });

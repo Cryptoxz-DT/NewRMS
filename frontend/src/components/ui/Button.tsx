@@ -10,7 +10,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
   fullWidth?: boolean;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -93,7 +93,7 @@ const Button: React.FC<ButtonProps> = ({
       {...props}
     >
       {iconElement && iconPosition === 'left' && iconElement}
-      <span className={loading ? 'opacity-0' : ''}>{children}</span>
+      {children && <span className={loading ? 'opacity-0' : ''}>{children}</span>}
       {iconElement && iconPosition === 'right' && iconElement}
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center">

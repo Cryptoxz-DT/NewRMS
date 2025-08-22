@@ -212,6 +212,7 @@ export interface NotificationState {
   message: string;
   duration?: number;
   timestamp: string;
+  read?: boolean;
 }
 
 // Form types
