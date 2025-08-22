@@ -200,13 +200,15 @@ const Dashboard: React.FC = () => {
         {/* Revenue Chart */}
         <motion.div variants={itemVariants}>
           <Card variant="elevated" padding="lg">
-            <Card.Header>
-              <Card.Title>Revenue Overview</Card.Title>
-              <Card.Description>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-secondary-900 dark:text-secondary-100">
+                Revenue Overview
+              </h3>
+              <p className="text-sm text-secondary-600 dark:text-secondary-400 mt-1">
                 Daily revenue for the past 7 days
-              </Card.Description>
-            </Card.Header>
-            <Card.Content>
+              </p>
+            </div>
+            <div>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={revenueChart}>
@@ -237,20 +239,22 @@ const Dashboard: React.FC = () => {
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
-            </Card.Content>
+            </div>
           </Card>
         </motion.div>
 
         {/* Orders Chart */}
         <motion.div variants={itemVariants}>
           <Card variant="elevated" padding="lg">
-            <Card.Header>
-              <Card.Title>Orders Trend</Card.Title>
-              <Card.Description>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-secondary-900 dark:text-secondary-100">
+                Orders Trend
+              </h3>
+              <p className="text-sm text-secondary-600 dark:text-secondary-400 mt-1">
                 Order volume for the past 7 days
-              </Card.Description>
-            </Card.Header>
-            <Card.Content>
+              </p>
+            </div>
+            <div>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={ordersChart}>
