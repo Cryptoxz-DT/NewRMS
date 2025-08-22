@@ -127,7 +127,6 @@ public class AuthController {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("error", "Invalid Credentials");
             errorResponse.put("message", "Invalid username/email or password");
-            
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
             
         } catch (Exception e) {
