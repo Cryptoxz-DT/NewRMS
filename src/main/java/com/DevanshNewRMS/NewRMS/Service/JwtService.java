@@ -190,4 +190,24 @@ public class JwtService {
             return false;
         }
     }
+    
+    /**
+     * Generate simple JWT token following video approach
+     * This method generates a token for a specific username
+     */
+    public String generateSimpleToken(String username) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("sub", username);
+        claims.put("iat", System.currentTimeMillis() / 1000);
+        claims.put("exp", (System.currentTimeMillis() / 1000) + (jwtExpiration / 1000));
+        
+        return Jwts
+                .builder()
+                .claims(claims)
+                .subject(username)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(getSignInKey(), Jwts.SIG.HS256)
+                .compact();
+    }
 }

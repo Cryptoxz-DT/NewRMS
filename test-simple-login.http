@@ -1,0 +1,32 @@
+### Test Simple Login Endpoint (Following Video Tutorial Approach)
+
+# Test with valid credentials
+POST http://localhost:8080/api/auth/simple-login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+###
+
+# Test with invalid credentials
+POST http://localhost:8080/api/auth/simple-login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "wrongpassword"
+}
+
+###
+
+# Test with non-existent user
+POST http://localhost:8080/api/auth/simple-login
+Content-Type: application/json
+
+{
+  "username": "nonexistent",
+  "password": "password"
+}

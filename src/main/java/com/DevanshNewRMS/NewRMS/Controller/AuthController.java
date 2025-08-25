@@ -34,6 +34,9 @@ public class AuthController {
     private final SecurityAuditService securityAuditService;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
+    
+    // Video approach - Direct authentication manager usage
+    private final org.springframework.security.authentication.AuthenticationManager authenticationManager;
 
     @GetMapping("/user")
     public ResponseEntity<Map<String, Object>> getCurrentUser() {
@@ -205,6 +208,52 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
+
+    // Video approach - Simple JWT login following the tutorial pattern
+    @PostMapping("/simple-login")
+    public ResponseEntity<?> simpleLogin(@RequestBody SimpleLoginRequest loginRequest) {
+        try {
+            log.info("Simple login attempt for user: {}", loginRequest.getUsername());
+            
+            // Create authentication token (unauthenticated) - as shown in video
+            org.springframework.security.authentication.UsernamePasswordAuthenticationToken authToken = 
+                new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                    loginRequest.getUsername(), 
+                    loginRequest.getPassword()
+                );
+            
+            // Authenticate using AuthenticationManager - video approach
+            org.springframework.security.core.Authentication authentication = 
+                authenticationManager.authenticate(authToken);
+            
+            // Check if authentication was successful
+            if (authentication.isAuthenticated()) {
+                // Generate token using JWT service (video approach)
+                String token = jwtService.generateSimpleToken(loginRequest.getUsername());
+                
+                Map<String, String> response = new HashMap<>();
+                response.put("token", token);
+                response.put("message", "Login successful");
+                response.put("username", loginRequest.getUsername());
+                
+                log.info("Simple login successful for user: {}", loginRequest.getUsername());
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Authentication failed"));
+            }
+            
+        } catch (org.springframework.security.authentication.BadCredentialsException e) {
+            log.warn("Simple login failed - invalid credentials for user: {}", loginRequest.getUsername());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("message", "Invalid username or password"));
+        } catch (Exception e) {
+            log.error("Simple login error for user: {}", loginRequest.getUsername(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("message", "Login failed"));
+        }
+    }
+
 
     @PostMapping("/logout")
     public ResponseEntity<Map<String, String>> logout(HttpServletRequest request) {
